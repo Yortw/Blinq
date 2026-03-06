@@ -109,7 +109,7 @@ namespace Blinq
 			}
 
 			var list = new List<BlobItem>();
-			await foreach (var item in source.ToAsyncEnumerable().WithCancellation(cancellationToken).ConfigureAwait(false))
+			await foreach (var item in source.ToAsyncEnumerable(cancellationToken).ConfigureAwait(false))
 			{
 				if (item != null)
 				{
@@ -125,6 +125,7 @@ namespace Blinq
 		/// If the underlying queryable supports <see cref="IAsyncEnumerable{BlobItem}"/>, this method will enumerate asynchronously; otherwise, it will enumerate synchronously.
 		/// </summary>
 		/// <param name="source">The queryable blob metadata source.</param>
+		/// <param name="cancellationToken">A cancellation token.</param>
 		/// <returns>An async enumerable of <see cref="BlobItem"/> results.</returns>
 		public static async IAsyncEnumerable<BlobItem> ToAsyncEnumerable(
 			this IQueryable<BlobItem> source,
@@ -160,7 +161,7 @@ namespace Blinq
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			await foreach (var _ in source.ToAsyncEnumerable().WithCancellation(cancellationToken))
+			await foreach (var _ in source.ToAsyncEnumerable(cancellationToken).ConfigureAwait(false))
 			{
 				return true;
 			}
@@ -181,7 +182,7 @@ namespace Blinq
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			await foreach (var item in source.ToAsyncEnumerable().WithCancellation(cancellationToken))
+			await foreach (var item in source.ToAsyncEnumerable(cancellationToken).ConfigureAwait(false))
 			{
 				return item;
 			}
@@ -203,7 +204,7 @@ namespace Blinq
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			await foreach (var item in source.ToAsyncEnumerable().WithCancellation(cancellationToken))
+			await foreach (var item in source.ToAsyncEnumerable(cancellationToken).ConfigureAwait(false))
 			{
 				return item;
 			}
@@ -227,7 +228,7 @@ namespace Blinq
 
 			BlobItem? result = null;
 			bool found = false;
-			await foreach (var item in source.ToAsyncEnumerable().WithCancellation(cancellationToken))
+			await foreach (var item in source.ToAsyncEnumerable(cancellationToken).ConfigureAwait(false))
 			{
 				if (found)
 				{
@@ -261,7 +262,7 @@ namespace Blinq
 			}
 
 			var list = new List<BlobItem>();
-			await foreach (var item in source.ToAsyncEnumerable().WithCancellation(cancellationToken))
+			await foreach (var item in source.ToAsyncEnumerable(cancellationToken).ConfigureAwait(false))
 			{
 				list.Add(item);
 				if (list.Count >= count)

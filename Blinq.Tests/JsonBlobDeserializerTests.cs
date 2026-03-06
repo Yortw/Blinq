@@ -29,7 +29,7 @@ namespace Blinq.Tests
 			var deserializer = new JsonBlobDeserializer();
 			using var stream = ToStream("""{"id":2,"name":"Async","active":false}""");
 
-			var result = await deserializer.DeserializeAsync<TestDocument>(stream);
+			var result = await deserializer.DeserializeAsync<TestDocument>(stream, TestContext.Current.CancellationToken);
 
 			Assert.NotNull(result);
 			Assert.Equal(2, result.Id);

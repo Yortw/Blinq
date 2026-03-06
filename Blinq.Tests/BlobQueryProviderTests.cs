@@ -54,21 +54,21 @@ namespace Blinq.Tests
 		public async Task AnyAsync_NullSource_ThrowsArgumentNullException()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(() =>
-				BlobQueryableAsyncExtensions.AnyAsync<string>(null!));
+				BlobQueryableAsyncExtensions.AnyAsync<string>(null!, TestContext.Current.CancellationToken));
 		}
 
 		[Fact]
 		public async Task FirstOrDefaultAsync_NullSource_ThrowsArgumentNullException()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(() =>
-				BlobQueryableAsyncExtensions.FirstOrDefaultAsync<string>(null!));
+				BlobQueryableAsyncExtensions.FirstOrDefaultAsync<string>(null!, TestContext.Current.CancellationToken));
 		}
 
 		[Fact]
 		public async Task TakeAsync_NullSource_ThrowsArgumentNullException()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(() =>
-				BlobQueryableAsyncExtensions.TakeAsync<string>(null!, 5));
+				BlobQueryableAsyncExtensions.TakeAsync<string>(null!, 5, TestContext.Current.CancellationToken));
 		}
 
 		[Fact]

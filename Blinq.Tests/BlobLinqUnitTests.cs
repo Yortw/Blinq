@@ -27,7 +27,7 @@ namespace Blinq.Tests
 			var deserializer = new StringBlobDeserializer();
 			var testString = "Async Hello, Blinq!";
 			using var ms = new MemoryStream(Encoding.UTF8.GetBytes(testString));
-			var result = await deserializer.DeserializeAsync<string>(ms);
+			var result = await deserializer.DeserializeAsync<string>(ms, TestContext.Current.CancellationToken);
 			Assert.Equal(testString, result);
 		}
 
@@ -44,7 +44,7 @@ namespace Blinq.Tests
 		{
 			var deserializer = new StringBlobDeserializer();
 			using var ms = new MemoryStream(Encoding.UTF8.GetBytes("irrelevant"));
-			await Assert.ThrowsAsync<NotSupportedException>(async () => await deserializer.DeserializeAsync<int>(ms));
+			await Assert.ThrowsAsync<NotSupportedException>(async () => await deserializer.DeserializeAsync<int>(ms, TestContext.Current.CancellationToken));
 		}
 
 		[Fact]
@@ -63,7 +63,7 @@ namespace Blinq.Tests
 			var deserializer = new ByteArrayBlobDeserializer();
 			var testBytes = new byte[] {10,20,30,40,50 };
 			using var ms = new MemoryStream(testBytes);
-			var result = await deserializer.DeserializeAsync<byte[]>(ms);
+			var result = await deserializer.DeserializeAsync<byte[]>(ms, TestContext.Current.CancellationToken);
 			Assert.Equal(testBytes, result);
 		}
 
@@ -80,7 +80,7 @@ namespace Blinq.Tests
 		{
 			var deserializer = new ByteArrayBlobDeserializer();
 			using var ms = new MemoryStream(new byte[] {1 });
-			await Assert.ThrowsAsync<NotSupportedException>(async () => await deserializer.DeserializeAsync<string>(ms));
+			await Assert.ThrowsAsync<NotSupportedException>(async () => await deserializer.DeserializeAsync<string>(ms, TestContext.Current.CancellationToken));
 		}
 
 		[Fact]

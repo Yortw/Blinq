@@ -27,7 +27,7 @@ namespace Blinq.Tests
 			from x in _containerClient.AsQueryable<string>(deserializer: StringBlobDeserializer.Default)
 			where x.Metadata.Properties.ContentType == "application/json"
 			select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.True(results.Count >=100);
 			Assert.All(results, r => Assert.EndsWith(".json", r.BlobName));
@@ -42,7 +42,7 @@ namespace Blinq.Tests
 			from x in _containerClient.AsQueryable<string>(deserializer: StringBlobDeserializer.Default)
 			where x.Metadata.Properties.ContentType == "application/json"
 			select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			var activeCount = results.Count(r => r.Content?.Contains("\"active\": true") ?? false);
 			var inactiveCount = results.Count(r => r.Content?.Contains("\"active\": false") ?? false);
@@ -59,7 +59,7 @@ namespace Blinq.Tests
 			from x in _containerClient.AsQueryable<string>(deserializer: StringBlobDeserializer.Default)
 			where x.Metadata.Properties.ContentType == "application/json"
 			select x
-			).TakeAsync(10);
+			).TakeAsync(10, TestContext.Current.CancellationToken);
 
 			Assert.Equal(10, results.Count);
 		}

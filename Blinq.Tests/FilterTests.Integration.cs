@@ -55,7 +55,7 @@ namespace Blinq.Tests
 				where
 					x.BlobName == "TestDocument1.json"
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
@@ -83,7 +83,7 @@ namespace Blinq.Tests
 					x.BlobName == "TestDocument1.json"
 						&& x.Content != null && x.Content.Name == "Test Document 1"
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
@@ -109,7 +109,7 @@ namespace Blinq.Tests
 				where
 					x.Metadata.Properties.ContentLength >= 1000
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.SkipWhen(results.Count == 0, "No blobs >= 1000 bytes found. Re-run Upload-TestBlobs.ps1 to upload sample004-nz001.json.");
 			Assert.Contains(results, r => r.Content?.Name == "NZ001");
@@ -131,7 +131,7 @@ namespace Blinq.Tests
 					x.BlobName.StartsWith("TestDocument")
 						&& x.Content != null && x.Content.Name == "Test Document 2"
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
@@ -160,7 +160,7 @@ namespace Blinq.Tests
 					 && x.BlobName.EndsWith(".json")
 						&& x.Content != null && x.Content.Name == "Test Document 1"
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
@@ -226,7 +226,7 @@ namespace Blinq.Tests
 					&& x.BlobName.EndsWith(".json")
 					&& x.Content != null && x.Content.Name == "Test Document 1"
 				select x
-			).AnyAsync();
+			).AnyAsync(TestContext.Current.CancellationToken);
 
 			Assert.True(result);
 		}
@@ -242,7 +242,7 @@ namespace Blinq.Tests
 				where
 					x.BlobName.StartsWith("TestDocument")
 				select x
-			).Skip(1).TakeAsync(1);
+			).Skip(1).TakeAsync(1, TestContext.Current.CancellationToken);
 
 			Assert.NotNull(result);
 			Assert.Equal("Test Document 1", result.First().Content?.Name);
@@ -299,7 +299,7 @@ namespace Blinq.Tests
 					x.Metadata.Properties.ContentType == "application/json"
 						&& x.Content != null && x.Content.Name == "Test Document 2"
 				select x
-			).ToListAsync()).Select(x => x.Content);
+			).ToListAsync(TestContext.Current.CancellationToken)).Select(x => x.Content);
 
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
@@ -322,7 +322,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsQueryable<TestDocument>(15)
 				where x.BlobName.StartsWith("sample004") && x.Content != null && x.Content.Id == 4
 				select x
-			).AnyAsync();
+			).AnyAsync(TestContext.Current.CancellationToken);
 			Assert.True(result);
 		}
 
@@ -335,7 +335,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsQueryable<TestDocument>(15)
 				where x.BlobName.StartsWith("TestDocument") && x.Content != null
 				select x
-			).FirstOrDefaultAsync();
+			).FirstOrDefaultAsync(TestContext.Current.CancellationToken);
 			Assert.NotNull(result);
 			Assert.True(result.Content?.Name == "Test Document 1" || result.Content?.Name == "Test Document 2");
 		}
@@ -349,7 +349,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsQueryable<TestDocument>(15)
 				where x.BlobName.StartsWith("TestDocument") && x.Content != null && x.Content.Name == "Test Document 1"
 				select x
-			).SingleAsync();
+			).SingleAsync(TestContext.Current.CancellationToken);
 			Assert.NotNull(result);
 			Assert.Equal("Test Document 1", result.Content?.Name);
 		}
@@ -363,7 +363,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsQueryable<TestDocument>(15)
 				where x.BlobName.StartsWith("TestDocument") && x.Content != null
 				select x
-			).TakeAsync(2);
+			).TakeAsync(2, TestContext.Current.CancellationToken);
 			Assert.NotNull(results);
 			Assert.Equal(2, results.Count);
 			Assert.Contains(results, r => r.Content?.Name == "Test Document 1");
@@ -384,7 +384,7 @@ namespace Blinq.Tests
 					&& x.BlobName.EndsWith(".json") 
 					&& x.Content != null && x.Content.Contains("Test Document 2", StringComparison.OrdinalIgnoreCase)
 				select x
-			).FirstAsync();
+			).FirstAsync(TestContext.Current.CancellationToken);
 
 			Assert.Equal(typeof(string), result.Content?.GetType());
 			Assert.False(string.IsNullOrEmpty(result.Content));
@@ -404,7 +404,7 @@ namespace Blinq.Tests
 					x.BlobName.StartsWith("TestDocument")
 					&& x.BlobName.EndsWith(".json")
 				select x
-			).FirstAsync();
+			).FirstAsync(TestContext.Current.CancellationToken);
 
 			Assert.Equal(typeof(byte[]), result.Content?.GetType());
 			Assert.NotNull(result.Content);
@@ -426,7 +426,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsQueryable<TestDocument>(15)
 				where x.Metadata.Properties.ContentType == expectedContentType
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.NotEmpty(results);
 			Assert.All(results, r => Assert.Equal("application/json", r.Metadata.Properties.ContentType));
@@ -446,7 +446,7 @@ namespace Blinq.Tests
 				where x.BlobName.StartsWith("TestDocument")
 					&& x.Content != null && x.Content.Name == expectedName
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.Single(results);
 			Assert.Equal("Test Document 1", results.First().Content?.Name);
@@ -467,7 +467,7 @@ namespace Blinq.Tests
 				where x.Metadata.Properties.ContentType == contentType
 					&& x.Content != null && x.Content.Name == docName
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.Single(results);
 			Assert.Equal("Test Document 2", results.First().Content?.Name);
@@ -490,7 +490,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsBlobItemQueryable()
 				where x.Properties.ContentType == "application/json"
 				select x
-			).TakeAsync(3);
+			).TakeAsync(3, TestContext.Current.CancellationToken);
 
 			Assert.NotEmpty(results);
 			Assert.All(results, r =>
@@ -512,7 +512,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsBlobItemQueryable()
 				where x.Name == "TestDocument1.json"
 				select x
-			).FirstOrDefaultAsync();
+			).FirstOrDefaultAsync(TestContext.Current.CancellationToken);
 
 			Assert.SkipWhen(
 				probe == null || !probe.Metadata.ContainsKey("source"),
@@ -524,7 +524,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsBlobItemQueryable()
 				where x.Metadata.ContainsKey("category")
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.NotEmpty(results);
 			Assert.All(results, r => Assert.True(r.Metadata.ContainsKey("category")));
@@ -542,7 +542,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsBlobItemQueryable()
 				where x.Name == "TestDocument1.json"
 				select x
-			).FirstOrDefaultAsync();
+			).FirstOrDefaultAsync(TestContext.Current.CancellationToken);
 
 			Assert.SkipWhen(
 				probe == null || !probe.Metadata.ContainsKey("category"),
@@ -556,12 +556,12 @@ namespace Blinq.Tests
 				where x.Metadata.Metadata.ContainsKey("category")
 					&& x.Metadata.Metadata["category"] == expectedCategory
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.NotEmpty(results);
 			Assert.All(results, r =>
 			{
-				Assert.True(r.BlobName.StartsWith("TestDocument"));
+				Assert.StartsWith("TestDocument", r.BlobName);
 			});
 		}
 

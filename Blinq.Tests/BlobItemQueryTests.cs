@@ -23,7 +23,7 @@ namespace Blinq.Tests
 				from x in containerClient.AsBlobItemQueryable()
 				where x.Properties.ContentType == "application/json"
 				select x
-			).ToListAsync();
+			).ToListAsync(TestContext.Current.CancellationToken);
 
 			Assert.NotEmpty(results);
 			foreach (var result in results)

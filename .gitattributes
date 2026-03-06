@@ -1,0 +1,20 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# C# source files
+*.cs text diff=csharp
+*.csproj text
+*.sln text eol=crlf
+
+# Shell scripts should keep LF
+*.sh text eol=lf
+
+# Ensure batch files keep CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.nupkg binary
+*.snupkg binary
